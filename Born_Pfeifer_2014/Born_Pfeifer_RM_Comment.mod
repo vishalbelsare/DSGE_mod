@@ -274,8 +274,8 @@ burnin=4000; //periods for convergence
 shocks_mat_with_zeros=zeros(burnin,M_.exo_nbr); //shocks set to 0 to simulate without uncertainty
 %% Note that simult_FGRU.m uses the original non-standard pruning scheme
 out_noshock = simult_FGRU(oo_.dr.ys,oo_.dr,shocks_mat_with_zeros,options_.order,zeros(size(oo_.dr.ys)),zeros(M_.exo_nbr,1)); //simulate series
-%% To simulate serires with proper pruning scheme as in Andreasen et al. (2013), use the following code
-% out_noshock = simult_(oo_.dr.ys,oo_.dr,shocks_mat_with_zeros,options_.order); //simulate series
+%% To simulate series with proper pruning scheme as in Andreasen et al. (2013), use the following code
+%out_noshock = simult_(M_,options_,oo_.dr.ys,oo_.dr,shocks_mat_with_zeros,options_.order); //simulate series
 
 log_deviations_SS_noshock=out_noshock-oo_.dr.ys*ones(1,burnin+M_.maximum_lag); //subtract steady state to get deviations from steady state
 ergodicmean_no_shocks=out_noshock(:,end); //EMAS is the final point
@@ -326,8 +326,8 @@ end
     2020.834869	2088.867827	2143.699678	2162.988008	2180.877811	2235.76154	2245.712878	2283.408651	2248.343042	2143.783469	2141.92964	2148.906887	2232.504485	2275.872614	2345.42916	2389.460481	2435.206193	2470.569039	2556.708774	2577.441177	2581.202765	2632.06745	2610.036355	2547.429249	2492.66739	2466.3382	2437.073459	2485.946525	2496.646542	2446.571373	2415.941978	2438.928987	2449.792763	2421.666111	2293.214979	2167.311166	2032.842339	2156.276599	2127.532245	2170.183443	2201.525895	2336.46059	2357.93814	2427.060292	2466.141057	2519.578133	2556.519533] ;
 
     //extract cyclical properties
-    [yt,yd] = hpfilter(log(argentina(1,:)'),1600) ;
-    [nx_y_t,nx_y_d] = hpfilter((argentina(4,:)./(argentina(1,:)))',1600) ;
+    [yt,yd] = hpfilter(log(argentina(1,:)'),Smoothing=1600) ;
+    [nx_y_t,nx_y_d] = hpfilter((argentina(4,:)./(argentina(1,:)))',Smoothing=1600) ;
     moments_emp(9,1)=std(nx_y_d)*100;
     moments_emp(10,1)=corr(nx_y_d,yd);
 
@@ -539,7 +539,7 @@ eval(['print -depsc2 Current_Account',country_string,end_save_string])
 
     //options_.qz_criterium = 1+1e-6; //required because it is empty by default, leading to a crash in k_order_pert
     [shock_mat]=generate_FGRU_shocks(estimation_replications,winsorizing_dummy);
-    [fhat,xhat] = csminwel(@smm_diff_function,x_start,H0,[],crit,nit,target,estimation_replications,shock_mat(:,:,1:estimation_replications));
+    [fhat,xhat] = csminwel(@smm_diff_function,x_start,H0,[],crit,nit,target,estimation_replications,shock_mat(:,:,1:estimation_replications),M_,oo_,options_);
 
 @# endif
 

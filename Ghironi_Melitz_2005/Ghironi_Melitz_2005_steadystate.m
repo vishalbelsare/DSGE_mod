@@ -32,6 +32,7 @@ function [ys,params,check] = Ghironi_Melitz_2005_steadystate(ys,exo,M_,options_)
 %  see <http://www.gnu.org/licenses/>.
 
 %% Steady state model
+delta=0; %make sure name is known to not conflict with built-in functions
 
 % read out parameters to access them with their name
 NumberOfParameters = M_.param_nbr;
@@ -57,13 +58,13 @@ check = 0;
     xi_1    =   ((tau*zmin)^(theta-1))*(k/(k-(theta-1)))^2;
     xi_2    =   (zmin^k)*((k/(k-(theta-1)))^(k/(theta-1)))*((theta-1)/(k-(theta-1)));
     xi_3    =   ((1-(1-delta)*betaa)/((1-delta)*betaa))*fe/fx;
-
-    solv_options = optimoptions('fsolve','Display','None');  
+  
     initval  = 0.5;
 
     if ~user_has_matlab_license('optimization_toolbox')
         [ztildexss,rc] = csolve(@(ztildex) xi_1*(ztildex^(1-theta))+xi_2*(ztildex^(-k))-xi_3,initval,[],1e-6,1000)
     else
+        solv_options = optimoptions('fsolve','Display','None');
         ztildexss = fsolve(@(ztildex) xi_1*(ztildex^(1-theta))+xi_2*(ztildex^(-k))-xi_3,...
               initval,solv_options);
     end

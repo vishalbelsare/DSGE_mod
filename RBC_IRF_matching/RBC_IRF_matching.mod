@@ -199,7 +199,7 @@ stoch_simul(order = 1,irf=@{IRF_periods}) log_y log_c ghat;
 
 
 %% get empirical IRFs and weighting matrix
-[IRF_empirical,IRF_weighting,IRF_quantiles]=get_empirical_IRFs(@{IRF_periods})
+[IRF_empirical,IRF_weighting,IRF_quantiles]=get_empirical_IRFs(@{IRF_periods});
          
 
 x_start=[root_g_1 root_g_2]; %use calibration as starting point
@@ -218,19 +218,19 @@ options_.noprint=1;
     crit = 1e-8; %Tolerance
     nit = 1000;  %Number of iterations
 
-    [fhat,x_opt_hat] = csminwel(@IRF_matching_objective,x_start,H0,[],crit,nit,IRF_empirical,IRF_weighting);
+    [fhat,x_opt_hat] = csminwel(@IRF_matching_objective,x_start,H0,[],crit,nit,IRF_empirical,IRF_weighting,M_,oo_,options_);
 @#else
     %set CMAES options
     H0=0.2*ones(size(x_start,1),1)
     cmaesOptions = options_.cmaes;
     cmaesOptions.LBounds = [-1;-1];
     cmaesOptions.UBounds = [1;1];
-    [x_opt_hat, fhat, COUNTEVAL, STOPFLAG, OUT, BESTEVER] = cmaes('IRF_matching_objective',x_start,H0,cmaesOptions,IRF_empirical,IRF_weighting);
+    [x_opt_hat, fhat, COUNTEVAL, STOPFLAG, OUT, BESTEVER] = cmaes('IRF_matching_objective',x_start,H0,cmaesOptions,IRF_empirical,IRF_weighting,M_,oo_,options_);
     x_opt_hat=BESTEVER.x;
 @#endif
 
 %get IRFs at the optimum and plot them
-[fval, IRF_model]=IRF_matching_objective(x_opt_hat,IRF_empirical,IRF_weighting);
+[fval, IRF_model]=IRF_matching_objective(x_opt_hat,IRF_empirical,IRF_weighting,M_,oo_,options_);
 
 figure
 subplot(2,1,1)

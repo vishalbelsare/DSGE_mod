@@ -6,7 +6,7 @@
  * to achieve a given path of the nominal interest rate: fixed at the steady state for three periods, followed 
  * by a drop of 100 basis points annualized (25bp quarterly).
  *
- * THIS MOD-FILE REQUIRES DYNARE 4.5 OR HIGHER
+ * THIS MOD-FILE REQUIRES DYNARE 6.0 OR HIGHER
  *
  *
  * This implementation was written by Johannes Pfeifer. In case you spot mistakes,
@@ -41,7 +41,7 @@ var pi          ${\pi}$                 (long_name='inflation')
     yhat        ${\hat y}$              (long_name='output deviation from steady state')
     r_nat       ${r^{nat}}$             (long_name='natural interest rate')
     r_real      ${r^r}$                 (long_name='real interest rate')     
-    i           ${i}$                   (long_name='nominal interrst rate')
+    i           ${i}$                   (long_name='nominal interest rate')
     n           ${n}$                   (long_name='hours worked')
     m_real      ${m-p}$                 (long_name='real money stock')
     m_growth_ann ${\Delta m}$           (long_name='money growth annualized')
